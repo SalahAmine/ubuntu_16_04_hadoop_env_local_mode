@@ -33,7 +33,7 @@ hive>
 How to sync hive metadata with added/removed patitions 
 
 ```
-MSCK [REPAIR] TABLE table_name
+MSCK [REPAIR] TABLE table_name;
 ref: https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
 
 ```

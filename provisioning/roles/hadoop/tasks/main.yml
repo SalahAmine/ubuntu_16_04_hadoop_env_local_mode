@@ -1,0 +1,31 @@
+## install hadoop
+- block:
+
+  - name: Download hadoop tarball
+    # will only download if the file is not present
+    get_url:
+      url: "{{ hadoop_url }}"
+      dest: "{{ repo_dir }}/hadoop-{{hadoop_version}}.tar.gz"
+      force: no
+
+  - name: Extract hadoop tarball
+    unarchive:
+      # creates : If the specified absolute path (file or directory) already exists, this step will not be run.
+      creates: "{{ install_dir }}/hadoop-{{hadoop_version}}"
+      src: "{{ repo_dir }}/hadoop-{{hadoop_version}}.tar.gz"
+      dest: "{{ install_dir }}"
+      # Set to yes to indicate the archived file is already on the remote system and not local to the Ansible controller.
+      remote_src: yes
+
+  - name: Change file ownership, group and permissions
+    file:
+      path: "{{ install_dir }}/hadoop-{{hadoop_version}}"
+      mode: '0755'
+      recurse: yes
+
+- name: setup config
+  include: setup_config.yml
+- name: setup env variables
+  include: setup_env_vars.yml
+
+

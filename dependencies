@@ -1,0 +1,23 @@
+
+convention linux FSH
+
+/opt : Logiciels non inclus dans la distribution et installés manuellement pour tous les utilisateurs.
+/usr/local/ : 	Hiérarchie tertiaire pour les données locales, spécifiques à l'ordinateur. 
+
+/usr/local/hive/
+
+TODO
+variabiliser les fihicers de conf avec jinja 
+maitriser install java
+maitriser lineinsert ( ansible)
+export PATH or PATH
+variables when bash is sourced ( reading)
+linux process model and export variable ? 
+. /etc/profile.d  sourced  when user logged in, but not when changing user with sudo su 
+
+
+# shows all the sytem vairables and defaults java vars loader for a java process inside a jvm 
+java -XshowSettings:all 
+
+
+pyspark --conf "spark.executor.extraJavaOptions='-Dlog4j.logger.org.apache.hadoop.util.NativeCodeLoader=DEBUG'" --driver-java-options "-Dlog4j.logger.org.apache.hadoop.util.NativeCodeLoader=DEBUG"

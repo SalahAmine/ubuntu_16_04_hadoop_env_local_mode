@@ -1,0 +1,31 @@
+- block:
+  - name: Copy config file
+    copy:
+      src: ../conf/pseudo_distributed_mode/hadoop-env.sh
+      dest: "{{ install_dir }}/hadoop-{{hadoop_version}}/etc/hadoop/"
+      force: yes
+
+  - name: Copy config file
+    copy:
+      src: ../conf/pseudo_distributed_mode/core-site.xml
+      dest: "{{ install_dir }}/hadoop-{{hadoop_version}}/etc/hadoop/"
+      force: yes
+
+  - name: Copy config file
+    copy:
+      src: ../conf/pseudo_distributed_mode/hdfs-site.xml
+      dest: "{{ install_dir }}/hadoop-{{hadoop_version}}/etc/hadoop/"
+      force: yes
+
+  - name: add ssh pki for datanode
+    shell: |
+      yes y | ssh-keygen -t rsa -P '' -f   ~/.ssh/id_rsa
+      cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+      chmod 0600 ~/.ssh/authorized_keys
+
+  - name: format namenode
+    shell: "{{ install_dir }}/hadoop-{{hadoop_version}}/bin/hdfs namenode -format -force -nonInteractive"
+  - name: start hdfs
+    shell: "{{ install_dir }}/hadoop-{{hadoop_version}}/sbin/start-dfs.sh"
+
+  when: hadoop_install_mode == "pseudo_distributed"

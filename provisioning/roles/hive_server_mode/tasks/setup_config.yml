@@ -1,0 +1,44 @@
+- name: Create a the metastore dir
+  file:
+   # idempotent: equals to  mkdir -p
+    path: /usr/local/hive/
+    state: directory
+    mode: '0755'
+
+- name: Copy config file with owner and permissions
+  copy:
+    src: ../conf/hive-site.xml
+    dest: "{{install_dir}}/apache-hive-{{hive_version}}-bin/conf"
+
+- name: install postgresql
+  package:
+    name: postgresql
+    state: present
+
+- name: Start service httpd, if not started
+  service:
+    name: postgresql 
+    state: started
+
+- name: Download jdbc postgres driver 
+  get_url:
+    url: "https://jdbc.postgresql.org/download/postgresql-42.2.6.jar"
+    # when specifiy the exact file location ( instead of a directory) will only download if this file is not present
+    dest: /usr/share/java/postgresql-42.2.6.jar
+    mode: '644'
+
+- name: Create a symbolic link to jdbc postgres driver 
+  file:
+    src: /usr/share/java/postgresql-42.2.6.jar
+    dest: /opt/apache-hive-1.2.2-bin/lib/postgresql-42.2.6.jar
+    state: link
+
+
+
+- name: configure postgres for hivemetastore
+  shell: |
+    psql -U postgres -c "CREATE DATABASE metastore_hive_db;"
+    psql -U postgres -c "CREATE USER hive_user WITH PASSWORD 'pass_2019';"
+    psql -U postgres -c  "GRANT ALL PRIVILEGES ON DATABASE metastore_hive_db  TO hive_user;"
+  become_user: postgres
+

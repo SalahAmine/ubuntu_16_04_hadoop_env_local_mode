@@ -1,0 +1,76 @@
+## install impala
+- stat: path=/opt/apache-impala-3.0.1
+  register: impala_dir
+
+- block:
+
+  - name: Download impala tarball
+    get_url:
+      url: "http://www-us.apache.org/dist/impala/3.0.1/apache-impala-3.0.1.tar.gz"
+      # when specifiy the exact file location ( instead of a directory) will only download if this file is not present
+      dest: /opt/apache-impala-3.0.1.tar.gz
+
+  - name: Extract impala tarball
+    unarchive:
+      # creates : If the specified absolute path (file or directory) already exists, this step will not be run.
+      creates: /opt/apache-impala-3.0.1
+      src: "/opt/apache-impala-3.0.1.tar.gz"
+      dest: /opt
+      # Set to yes to indicate the archived file is already on the remote system and not local to the Ansible controller.
+      remote_src: yes
+
+  - name: Change file ownership, group and permissions
+    file:
+      path: /opt/apache-impala-3.0.1
+      mode: '0777'
+      recurse: yes
+
+  - name: Download impala repo (CDH)
+    get_url:
+      url: 'https://archive.cloudera.com/cdh5/ubuntu/xenial/amd64/cdh/cloudera.list' 
+      dest: /etc/apt/sources.list.d/cloudera.list
+      force: no
+
+  - name: Install impala
+    apt:
+      name: impala
+      allow_unauthenticated: True
+      update_cache: yes
+      state: present
+
+  - name: Install impala-server
+    apt:
+      name: impala-server
+      allow_unauthenticated: True
+      update_cache: yes
+      state: present
+
+  - name: Install impala-state-store
+    apt:
+      name: impala-server
+      allow_unauthenticated: True
+      update_cache: yes
+      state: present
+
+  - name: Install impala-catalog
+    apt:
+      name: impala-catalog
+      allow_unauthenticated: True
+      update_cache: yes
+      state: present
+
+  - name: Install impala-shell
+    apt:
+      name: impala-shell
+      allow_unauthenticated: True
+      update_cache: yes
+      state: present
+
+# sudo apt-get install impala impala-server impala-state-store impala-catalog impala-shell
+
+# - name: setup config
+#   include: setup_config.yml
+# - name: setup env variables
+#   include: setup_env_vars.yml
+
+

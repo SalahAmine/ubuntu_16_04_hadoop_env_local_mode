@@ -1,0 +1,32 @@
+## install hive
+
+- block:
+
+  - name: Download spark tarball
+    get_url:
+      url: "{{spark_url}}"
+      # when specifiy the exact file location ( instead of a directory) will only download if this file is not present
+      dest: "{{repo_dir}}/spark-{{spark_version}}-bin-hadoop2.7.tgz"
+
+  - name: Extract spark tarball
+    unarchive:
+      # creates : If the specified absolute path (file or directory) already exists, this step will not be run.
+      creates: "{{install_dir}}/spark-{{spark_version}}-bin-hadoop2.7"
+      src: "{{repo_dir}}/spark-{{spark_version}}-bin-hadoop2.7.tgz"
+      dest: "{{install_dir}}"
+      # Set to yes to indicate the archived file is already on the remote system and not local to the Ansible controller.
+      remote_src: yes
+
+  - name: Change file ownership, group and permissions
+    file:
+      path:  "{{install_dir}}/spark-{{spark_version}}-bin-hadoop2.7"
+      mode: '0755'
+      recurse: yes
+
+
+- name: setup config
+  include: setup_config.yml
+- name: setup env variables
+  include: setup_env_vars.yml
+
+

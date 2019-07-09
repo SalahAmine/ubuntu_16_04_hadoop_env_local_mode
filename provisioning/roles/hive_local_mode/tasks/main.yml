@@ -1,0 +1,40 @@
+## install hive
+- stat: path=/opt/apache-hive-1.2.2-bin
+  register: hive_dir
+
+- block:
+
+  - name: Download hive tarball
+    get_url:
+      url: "http://www-us.apache.org/dist/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz"
+      # when specifiy the exact file location ( instead of a directory) will only download if this file is not present
+      dest: /opt/apache-hive-1.2.2-bin.tar.gz
+
+  - name: Extract hive tarball
+    unarchive:
+      # creates : If the specified absolute path (file or directory) already exists, this step will not be run.
+      creates: /opt/apache-hive-1.2.2-bin
+      src: "/opt/apache-hive-1.2.2-bin.tar.gz"
+      dest: /opt
+      # Set to yes to indicate the archived file is already on the remote system and not local to the Ansible controller.
+      remote_src: yes
+
+  - name: Change file ownership, group and permissions
+    file:
+      path: /opt/apache-hive-1.2.2-bin
+      mode: '0755'
+      recurse: yes
+
+  - name: create local warehouse for hive user
+    shell: |
+      mkdir -p /user/hive/warehouse
+      chmod 777 /user/hive/warehouse
+
+  when: hive_dir.stat.exists == False
+
+- name: setup config
+  include: setup_config.yml
+- name: setup env variables
+  include: setup_env_vars.yml
+
+

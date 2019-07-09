@@ -1,0 +1,16 @@
+- name: Create a the metastore dir
+  file:
+   # idempotent: equals to  mkdir -p
+    path: /usr/local/hive/
+    state: directory
+    mode: '0755'
+
+- name: Copy config file with owner and permissions
+  copy:
+    src: ../conf/hive-site.xml
+    dest: /opt/apache-hive-1.2.2-bin/conf
+
+#     sudo apt-get install postgresql
+#     sudo -u postgres psql postgres  
+# CREATE ROLE hiveuser LOGIN PASSWORD 'password'; 
+# ALTER ROLE hiveuser WITH CREATEDB;

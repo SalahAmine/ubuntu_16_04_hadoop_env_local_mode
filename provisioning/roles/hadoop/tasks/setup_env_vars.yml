@@ -1,0 +1,34 @@
+- name: Create a the file /etc/profile.d/hadoop.sh if it does not exist
+  file:
+    path: /etc/profile.d/hadoop.sh
+    state: touch
+
+- name: Adding the path in the Profile files
+  lineinfile:
+    path: /etc/profile.d/hadoop.sh
+    ###
+    ### Regex: For state=present, the pattern to replace if found. Only the last line found will be replaced.
+    ### If the regular expression is not matched,
+    ### the line will be added to the file in keeping with insertbefore or insertafter settings.
+    ### => find all the occurences matching this regex,
+    ### if found replace the last occurence with the 'line' content,
+    ### if no occurences are found insert the line as specified with insertbefore or insertafter params.
+    regexp: 'export HADOOP_HOME='
+    state: present
+    line: "export HADOOP_HOME={{install_dir}}/hadoop-{{hadoop_version}}"
+    insertafter: 'EOF'
+
+- name: Adding the path in the Profile files
+  lineinfile:
+    path: /etc/profile.d/hadoop.sh
+    ###
+    ### Regex: For state=present, the pattern to replace if found. Only the last line found will be replaced.
+    ### If the regular expression is not matched,
+    ### the line will be added to the file in keeping with insertbefore or insertafter settings.
+    ### => find all the occurences matching this regex,
+    ### if found replace the last occurence with the 'line' content,
+    ### if no occurences are found insert the line as specified with insertbefore or insertafter params.
+    regexp: 'PATH='
+    state: present
+    line: 'PATH=$PATH:$HADOOP_HOME/bin'
+    insertafter: 'EOF'

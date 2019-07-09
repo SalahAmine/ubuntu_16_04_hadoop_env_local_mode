@@ -1,0 +1,32 @@
+# integrate spark with other modules ( hdfs, hive )
+#https://spark.apache.org/docs/latest/sql-data-sources-hive-tables.html
+- name: Create a symbolic link to hive-site.xml
+  file:
+    src: /opt/apache-hive-1.2.2-bin/conf/hive-site.xml
+    dest: /opt/spark-2.4.3-bin-hadoop2.7/conf/hive-site.xml
+    state: link
+
+- name: Create a symbolic link to hdfs-site.xml
+  file:
+    src: /opt/hadoop-2.7.7/etc/hadoop/hdfs-site.xml
+    dest: /opt/spark-2.4.3-bin-hadoop2.7/conf/hdfs-site.xml
+    state: link
+
+- name: Create a symbolic link to core-site.xml
+  file:
+    src: /opt/hadoop-2.7.7/etc/hadoop/core-site.xml
+    dest: /opt/spark-2.4.3-bin-hadoop2.7/conf/core-site.xml
+    state: link
+
+- name: Download jdbc postgres driver 
+  get_url:
+    url: "https://jdbc.postgresql.org/download/postgresql-42.2.6.jar"
+    # when specifiy the exact file location ( instead of a directory) will only download if this file is not present
+    dest: /usr/share/java/postgresql-42.2.6.jar
+    mode: '644'
+
+- name: Create a symbolic link to jdbc postgres driver 
+  file:
+    src: /usr/share/java/postgresql-42.2.6.jar
+    dest: /opt/spark-2.4.3-bin-hadoop2.7/jars/postgresql-42.2.6.jar
+    state: link

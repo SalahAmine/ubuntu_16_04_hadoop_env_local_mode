@@ -1,0 +1,6 @@
+hadoop_version: 2.7.7
+hadoop_url: "https://www-us.apache.org/dist/hadoop/common/hadoop-{{hadoop_version}}/hadoop-{{hadoop_version}}.tar.gz"
+repo_dir: /opt
+install_dir: /opt
+# hadoop_dir: "{{ install_dir }}/hadoop-{{hadoop_version}}"
+hadoop_install_mode: local

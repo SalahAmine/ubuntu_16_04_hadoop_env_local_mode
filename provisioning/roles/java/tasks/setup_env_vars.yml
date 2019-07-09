@@ -1,0 +1,39 @@
+- name: Create a the file /etc/profile.d/java.sh if it does not exist
+  file:
+    path: /etc/profile.d/java.sh
+    state: touch
+
+- name: Adding the path in the Profile files
+  lineinfile:
+    path: /etc/profile.d/java.sh
+    ###
+    ### Regex: For state=present, the pattern to replace if found. Only the last line found will be replaced.
+    ### If the regular expression is not matched,
+    ### the line will be added to the file in keeping with insertbefore or insertafter settings.
+    ### => find all the occurences matching this regex,
+    ### if found replace the last occurence with the 'line' content,
+    ### if no occurences are found insert the line as specified with insertbefore or insertafter params.
+    regexp: 'export JAVA_HOME='
+    state: present
+    line: 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64'
+    insertafter: 'EOF'
+
+- name: Adding the path in the Profile files
+  lineinfile:
+    path: /etc/profile.d/java.sh
+    ###
+    ### Regex: For state=present, the pattern to replace if found. Only the last line found will be replaced.
+    ### If the regular expression is not matched,
+    ### the line will be added to the file in keeping with insertbefore or insertafter settings.
+    ### => find all the occurences matching this regex,
+    ### if found replace the last occurence with the 'line' content,
+    ### if no occurences are found insert the line as specified with insertbefore or insertafter params.
+    regexp: 'PATH='
+    state: present
+    line: 'PATH=$PATH:$JAVA_HOME/bin'
+    insertafter: 'EOF'
+# # /etc/profile.d is sourced per ssh session, so it will be seen only in ansible ssh session, not the user session
+# # the user must relogin to have its profile sourced with this varaible as well
+# - name: Source the profile.d file
+#   shell: . /etc/profile.d/java.sh
+

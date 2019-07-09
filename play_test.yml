@@ -1,0 +1,14 @@
+- name:
+  hosts: localhost
+  connection: local
+    # Setting gather_facts: False on a playbook allows this implicit fact gathering to be skipped.
+  gather_facts: False
+  become: yes
+  tasks:
+
+
+  - name: Create a the metastore dir
+    file:
+      path: /usr/local/hive/
+      state: directory
+      mode: '0777'

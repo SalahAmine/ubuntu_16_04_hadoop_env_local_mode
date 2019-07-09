@@ -2,7 +2,7 @@
 
 #  How to run & use Hive 
 
-1- run Hive Metastore ( postgres ) 
+1- run Hive Metastore ( postgres, runs  localhost:5432/metastore_hive_db  ) 
 ```
 service postgresql stop/start
 
@@ -27,5 +27,13 @@ beeline -u "jdbc:hive2://localhost:10000"
 hive
 
 hive>
+
+```
+
+How to sync hive metadata with added/removed patitions 
+
+```
+MSCK [REPAIR] TABLE table_name
+ref: https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL
 
 ```
